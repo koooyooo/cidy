@@ -67,7 +67,7 @@ Examples:
 
 func init() {
 	rootCmd.AddCommand(infoCmd)
-	infoCmd.Flags().BoolVar(&infoJSON, "json", false, "Output result in JSON format")
+	infoCmd.Flags().BoolVarP(&infoJSON, "json", "j", false, "Output result in JSON format")
 }
 
 // getBroadcastAddress returns the broadcast address for the given IPNet

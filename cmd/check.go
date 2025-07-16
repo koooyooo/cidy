@@ -100,5 +100,5 @@ func init() {
 	// -f/--file フラグ
 	checkCmd.Flags().StringP("file", "f", "", "IP address list file")
 	// --json フラグ
-	checkCmd.Flags().Bool("json", false, "Output result as JSON")
+	checkCmd.Flags().BoolP("json", "j", false, "Output result as JSON")
 }
