@@ -34,9 +34,24 @@ to quickly create a Cobra application.`,
 				return
 			}
 			cidrStr := args[0]
-			err := fileutil.CheckIPsInFile(filePath, cidrStr)
+			results, err := fileutil.CheckIPsInFile(filePath, cidrStr)
 			if err != nil {
 				fmt.Println(err)
+				return
+			}
+			if jsonOut {
+				b, _ := json.Marshal(results)
+				fmt.Println(string(b))
+			} else {
+				for _, r := range results {
+					if !r.Valid {
+						fmt.Printf("%s: Invalid IP address\n", r.IP)
+					} else if r.Match {
+						fmt.Printf("%s: true\n", r.IP)
+					} else {
+						fmt.Printf("%s: false\n", r.IP)
+					}
+				}
 			}
 			return
 		}

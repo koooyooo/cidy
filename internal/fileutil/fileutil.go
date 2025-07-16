@@ -25,27 +25,40 @@ func ReadIPList(path string) ([]string, error) {
 	return ips, scanner.Err()
 }
 
-// CheckIPsInFile checks each IP in the file against the given CIDR and prints the result.
-func CheckIPsInFile(filePath string, cidrStr string) error {
+type CheckResult struct {
+	IP    string `json:"ip"`
+	CIDR  string `json:"cidr"`
+	Match bool   `json:"match"`
+	Valid bool   `json:"valid"`
+}
+
+func CheckIPsInFile(filePath string, cidrStr string) ([]CheckResult, error) {
 	_, ipnet, err := net.ParseCIDR(cidrStr)
 	if err != nil {
-		return fmt.Errorf("Invalid CIDR")
+		return nil, fmt.Errorf("Invalid CIDR")
 	}
 	ips, err := ReadIPList(filePath)
 	if err != nil {
-		return fmt.Errorf("File read error: %v", err)
+		return nil, fmt.Errorf("File read error: %v", err)
 	}
+	var results []CheckResult
 	for _, ipStr := range ips {
 		ip := net.ParseIP(ipStr)
 		if ip == nil {
-			fmt.Printf("%s: Invalid IP address\n", ipStr)
+			results = append(results, CheckResult{
+				IP:    ipStr,
+				CIDR:  cidrStr,
+				Match: false,
+				Valid: false,
+			})
 			continue
 		}
-		if ipnet.Contains(ip) {
-			fmt.Printf("%s: true\n", ipStr)
-		} else {
-			fmt.Printf("%s: false\n", ipStr)
-		}
+		results = append(results, CheckResult{
+			IP:    ipStr,
+			CIDR:  cidrStr,
+			Match: ipnet.Contains(ip),
+			Valid: true,
+		})
 	}
-	return nil
+	return results, nil
 }
