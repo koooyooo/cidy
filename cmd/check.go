@@ -15,14 +15,21 @@ import (
 
 // checkCmd represents the check command
 var checkCmd = &cobra.Command{
-	Use:   "check",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Use:   "check [IP] [CIDR] | check -f [file] [CIDR]",
+	Short: "Check if IP address(es) are within a CIDR range",
+	Long: `Check if one or more IP addresses are within a specified CIDR range.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+Single IP check:
+  cidy check 192.168.1.10 192.168.1.0/24
+
+Bulk check from file:
+  cidy check -f ips.txt 192.168.1.0/24
+
+Output in JSON format:
+  cidy check --json 192.168.1.10 192.168.1.0/24
+  cidy check -f ips.txt 192.168.1.0/24 --json
+
+The file should contain one IP address per line.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		filePath, _ := cmd.Flags().GetString("file")
 		jsonOut, _ := cmd.Flags().GetBool("json")

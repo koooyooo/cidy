@@ -16,13 +16,20 @@ var infoJSON bool
 
 // infoCmd represents the info command
 var infoCmd = &cobra.Command{
-	Use:   "info <CIDR>",
-	Short: "Show information about a CIDR range",
-	Long: `Show detailed information about a given CIDR range, including network address, broadcast address, subnet mask, usable host range, and host count.
+	Use:   "info [CIDR]",
+	Short: "Display detailed information about a CIDR range",
+	Long: `Display comprehensive information about a given CIDR range, including:
+- Network address
+- Broadcast address  
+- Subnet mask
+- Usable host range (first and last IP)
+- Total number of usable hosts
 
 Examples:
   cidy info 192.168.0.0/24
+  cidy info 10.0.0.0/16
   cidy info --json 192.168.0.0/24
+  cidy info -j 172.16.0.0/12
 `,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
