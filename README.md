@@ -16,9 +16,14 @@ Supports single IP check, batch check from file, and JSON output.
 You need Go 1.22 or later.
 
 ```bash
-git clone https://github.com/koooyooo/cidy.git
-cd cidy
-go build -o cidy
+$  go install github.com/koooyooo/cidy@latest 
+```
+
+```bash
+$ git clone https://github.com/koooyooo/cidy.git
+$ cd cidy
+$ go build -o cidy
+$ mv cidy /usr/local/bin
 ```
 
 ## Usage
