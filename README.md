@@ -54,10 +54,33 @@ Each line in the file should contain a single IP address.
 # Output: {"ip":"192.168.0.5","cidr":"192.168.0.0/24","match":true}
 ```
 
-### Show CIDR range information (planned)
+### Show CIDR range information
+
+Display detailed information about a given CIDR range, including network address, broadcast address, subnet mask, usable host range, and host count.
 
 ```bash
 ./cidy info 192.168.0.0/24
+# Output:
+# CIDR:                192.168.0.0/24
+# Network Address:     192.168.0.0
+# Broadcast Address:   192.168.0.255
+# Subnet Mask:         255.255.255.0
+# Host Range:          192.168.0.1 - 192.168.0.254
+# Usable Hosts:        254
+
+./cidy info --json 192.168.0.0/24
+# Output:
+# {
+#   "cidr": "192.168.0.0/24",
+#   "network_address": "192.168.0.0",
+#   "broadcast_address": "192.168.0.255",
+#   "subnet_mask": "255.255.255.0",
+#   "host_range": {
+#     "from": "192.168.0.1",
+#     "to": "192.168.0.254"
+#   },
+#   "usable_hosts": 254
+# }
 ```
 *This feature is planned for future releases.*
 
@@ -66,7 +89,13 @@ Each line in the file should contain a single IP address.
 - `check`: Check if an IP address (or addresses from a file) is within a CIDR range.
   - `-f, --file <file>`: Specify a file containing IP addresses (one per line) for batch checking.
   - `--json`: Output the result in JSON format.
-- `info`: (planned) Show information about a CIDR range (broadcast address, host range, etc.)
+- `info`: Show information about a CIDR range, including:
+  - Network address
+  - Broadcast address
+  - Subnet mask
+  - Usable host range
+  - Usable host count
+  - `--json`: Output the result in JSON format
 
 ## Directory Structure
 
