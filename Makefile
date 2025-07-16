@@ -4,4 +4,4 @@ cidy:
 	@ go build -o cidy main.go
 
 install: cidy
-	@ cp cidy /usr/local/bin/cidy
+	@ sudo cp cidy /usr/local/bin/cidy
