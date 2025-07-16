@@ -1,0 +1,69 @@
+name: Manual Cross-Platform Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'リリースバージョン (例: v1.0.0)'
+        required: true
+        type: string
+      release_notes:
+        description: 'リリースノート（オプション）'
+        required: false
+        type: string
+        default: 'クロスプラットフォーム用バイナリリリース（Windows、Linux、macOS）'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.22'
+
+    - name: Build for multiple platforms
+      run: |
+        mkdir -p dist
+        
+        # Windows (amd64)
+        GOOS=windows GOARCH=amd64 go build -o dist/cidy-windows-amd64.exe main.go
+        
+        # Linux (amd64)
+        GOOS=linux GOARCH=amd64 go build -o dist/cidy-linux-amd64 main.go
+        
+        # macOS Intel (amd64)
+        GOOS=darwin GOARCH=amd64 go build -o dist/cidy-darwin-amd64 main.go
+        
+        # macOS Apple Silicon (arm64)
+        GOOS=darwin GOARCH=arm64 go build -o dist/cidy-darwin-arm64 main.go
+        
+    - name: Display built files
+      run: |
+        echo "Built files:"
+        ls -la dist/
+        echo ""
+        echo "File sizes:"
+        du -h dist/*
+        
+    - name: Create Release and Upload Binaries
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ github.event.inputs.version }}
+        name: Release ${{ github.event.inputs.version }}
+        body: ${{ github.event.inputs.release_notes }}
+        draft: false
+        prerelease: false
+        files: |
+          dist/cidy-windows-amd64.exe
+          dist/cidy-linux-amd64
+          dist/cidy-darwin-amd64
+          dist/cidy-darwin-arm64
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
